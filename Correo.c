@@ -13,6 +13,9 @@ const uint16_t smtpPort = 587; // Gmail utiliza el puerto 587 con TLS
 const char* emailEnvio= "lechugatadeista@gmail.com";
 const char* emailPassword = "SistemaAgrotecnologico";
 
+// Pin del sensor de humedad
+const int pinSensorHumedad = A0;
+
 void setup() {
   Serial.begin(115200);
   
@@ -25,19 +28,67 @@ void setup() {
   Serial.println("Conectado a WiFi");
 
   // Configuración del cliente SMTP
-  SMTP.begin(smtpServer, smtpPort, emailUsuario, emailPassword);
+  SMTP.begin(smtpServer, smtpPort, emailEnvio, emailPassword);
 }
 
 void loop() {
-  // Enviar correo electrónico
-  sendEmail();
-  delay(5000); // Envía el correo cada 5 segundos
+  // Leer el valor del sensor de humedad
+  int valorSensorHumedad = analogRead(pinSensorHumedad);
+
+  // Enviar correo electrónico si el valor del sensor de humedad es bajo (suelo seco)
+  if (valorSensorHumedad < 300) {
+    sendEmailMenor();
+  }
+
+  delay(5000); // Esperar 5 segundos antes de leer el sensor de nuevo
 }
 
-void sendEmail() {
+else if (valorSensorHumedad >= 300 && valorSensorHumedad < 700)
+  {
+  sendEmailBien();
+  }
+  
+else if (valorSensorHumedad >= 700 && valorSensorHumedad < 950)
+  {
+    sendEmailMucho();  
+  }
+
+else
+  {
+    sendEmailError();  
+  }
+
+void sendEmailMenor() {
   // Crear un mensaje de correo electrónico
   SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga te necesita :c");
   SMTP.println("Tu lechuga necesita agua.");
+  SMTP.endMessage();
+
+  // Esperar unos segundos para que el correo se envíe correctamente
+  delay(10000);
+
+void sendEmailBien() {
+  // Crear un mensaje de correo electrónico
+  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga esta feliz :D");
+  SMTP.println("Tu lechuga tiene suficiente agua.");
+  SMTP.endMessage();
+
+  // Esperar unos segundos para que el correo se envíe correctamente
+  delay(10000);
+
+void sendEmailMucho() {
+  // Crear un mensaje de correo electrónico
+  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga te necesita :c");
+  SMTP.println("Tu lechuga tiene mucha agua");
+  SMTP.endMessage();
+
+  // Esperar unos segundos para que el correo se envíe correctamente
+  delay(10000);
+
+void sendEmailError() {
+  // Crear un mensaje de correo electrónico
+  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga tiene un bug xd");
+  SMTP.println("Tu lechuga tiene un Silverfish");
   SMTP.endMessage();
 
   // Esperar unos segundos para que el correo se envíe correctamente
