@@ -10,9 +10,19 @@ int display[3][7] = {
     {0, 1, 1, 0, 1, 1, 1}, // H
     {1, 1, 0, 1, 1, 0, 1}, // 2
     {1, 1, 1, 1, 1, 1, 0}, // 0
+    {1, 1, 1, 0, 1, 1, 0} // N
+    {1, 1, 0, 1, 1, 1, 1} // e
+    {1, 1, 0, 1, 1, 1, 1} // e
+    {0, 1, 1, 1, 1, 0, 1} // d
+    {1, 0, 0, 1, 1, 1, 1} // m
+    {0, 0, 1, 1, 1, 0, 0 } //u
+    {0, 0, 0, 1, 1, 0, 1} // C
+    {0, 0, 1, 0, 1, 1, 1}, // h
+
+    {
 };
 
-bool A, B, C, D, E, F, G = false; // Corregido el inicializador, todos deben ser inicializados
+bool A, B, C, D, E, F, G = false; 
 
 void setup()
 {
@@ -49,5 +59,5 @@ void loop()
         Serial.println(" Compruebe el funcionamiento del sistema");
     }
 
-    delay(1000); // Agregué un pequeño retraso para evitar que la impresión sea demasiado rápida
+    delay(1000); 
 }
