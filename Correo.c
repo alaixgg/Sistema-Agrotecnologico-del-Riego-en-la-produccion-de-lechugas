@@ -1,96 +1,113 @@
 #include <WiFi.h>
-#include <SMTPClient.h>
 
-// Credenciales de WiFi
-const char* ssid = "iPhone de Andres(2)";
-const char* password = "LechugaTadeista";
+#include <ESP_Mail_Client.h>
 
-// Configuración del servidor SMTP de Gmail
-const char* smtpServer = "smtp.gmail.com";
-const uint16_t smtpPort = 587; // Gmail utiliza el puerto 587 con TLS
+#define WIFI_SSID "iPhone de Andres"
 
-// Credenciales de la cuenta de correo electrónico de Gmail
-const char* emailEnvio= "lechugatadeista@gmail.com";
-const char* emailPassword = "SistemaAgrotecnologico";
+#define WIFI_PASSWORD "LechugaTadeista"
 
-// Pin del sensor de humedad
-const int pinSensorHumedad = A0;
+#define SMTP_server "smtp.gmail.com"
 
-void setup() {
+#define SMTP_Port 465
+
+#define sender_email "lechugatadeista@gmail.com"
+
+#define sender_password "nndv axen atku xvwo"
+
+#define Recipient_email "andresj.alaixp@utadeo.edu.co"
+
+#define Recipient_name "Alaixgg"
+
+SMTPSession smtp;
+
+void setup(){
+
   Serial.begin(115200);
-  
-  // Conexión a WiFi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Conectando a WiFi...");
-  }
-  Serial.println("Conectado a WiFi");
 
-  // Configuración del cliente SMTP
-  SMTP.begin(smtpServer, smtpPort, emailEnvio, emailPassword);
+  Serial.println();
+
+  Serial.print("Connecting...");
+
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+  while (WiFi.status() != WL_CONNECTED)
+
+  { Serial.print(".");
+
+    delay(200);
+
+   }
+
+  Serial.println("");
+
+  Serial.println("WiFi connected.");
+
+  Serial.println("IP address: ");
+
+  Serial.println(WiFi.localIP());
+
+  Serial.println();
+
+  smtp.debug(1);
+
+  ESP_Mail_Session session;
+
+  session.server.host_name = SMTP_server ;
+
+  session.server.port = SMTP_Port;
+
+  session.login.email = sender_email;
+
+  session.login.password = sender_password;
+
+  session.login.user_domain = "";
+
+  /* Declare the message class */
+
+  SMTP_Message message;
+
+  message.sender.name = "Lechuga Inteligentisima";
+
+  message.sender.email = sender_email;
+
+  message.subject = "El ESP32 Ya funciona";
+
+  message.addRecipient(Recipient_name,Recipient_email);
+
+   //Send HTML message
+
+  String htmlMsg = "<div style=\"color:#000000;\"><h1> Que felicidad, pongame 5.0!</h1><p> Mail Generated from ESP32</p></div>";
+
+  message.html.content = htmlMsg.c_str();
+
+  message.html.content = htmlMsg.c_str();
+
+  message.text.charSet = "us-ascii";
+
+  message.html.transfer_encoding = Content_Transfer_Encoding::enc_7bit;
+
+ /* //Send simple text message
+
+  String textMsg = "How are you doing";
+
+  message.text.content = textMsg.c_str();
+
+  message.text.charSet = "us-ascii";
+
+  message.text.transfer_encoding = Content_Transfer_Encoding::enc_7bit;*/
+
+  if (!smtp.connect(&session))
+
+    return;
+
+  if (!MailClient.sendMail(&smtp, &message))
+
+    Serial.println("Error sending Email, " + smtp.errorReason());
+
 }
 
-void loop() {
-  // Leer el valor del sensor de humedad
-  int valorSensorHumedad = analogRead(pinSensorHumedad);
+void loop(){
 
-  // Enviar correo electrónico si el valor del sensor de humedad es bajo (suelo seco)
-  if (valorSensorHumedad < 300) {
-    sendEmailMenor();
-  }
+ 
 
-  delay(5000); // Esperar 5 segundos antes de leer el sensor de nuevo
-}
-
-else if (valorSensorHumedad >= 300 && valorSensorHumedad < 700)
-  {
-  sendEmailBien();
-  }
-  
-else if (valorSensorHumedad >= 700 && valorSensorHumedad < 950)
-  {
-    sendEmailMucho();  
-  }
-
-else
-  {
-    sendEmailError();  
-  }
-
-void sendEmailMenor() {
-  // Crear un mensaje de correo electrónico
-  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga te necesita :c");
-  SMTP.println("Tu lechuga necesita agua.");
-  SMTP.endMessage();
-
-  // Esperar unos segundos para que el correo se envíe correctamente
-  delay(10000);
-
-void sendEmailBien() {
-  // Crear un mensaje de correo electrónico
-  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga esta feliz :D");
-  SMTP.println("Tu lechuga tiene suficiente agua.");
-  SMTP.endMessage();
-
-  // Esperar unos segundos para que el correo se envíe correctamente
-  delay(10000);
-
-void sendEmailMucho() {
-  // Crear un mensaje de correo electrónico
-  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga te necesita :c");
-  SMTP.println("Tu lechuga tiene mucha agua");
-  SMTP.endMessage();
-
-  // Esperar unos segundos para que el correo se envíe correctamente
-  delay(10000);
-
-void sendEmailError() {
-  // Crear un mensaje de correo electrónico
-  SMTP.beginMessage(emailEnvio, "alaixgg@gmail.com", "Tu Lechuga tiene un bug xd");
-  SMTP.println("Tu lechuga tiene un Silverfish");
-  SMTP.endMessage();
-
-  // Esperar unos segundos para que el correo se envíe correctamente
-  delay(10000);
 }
