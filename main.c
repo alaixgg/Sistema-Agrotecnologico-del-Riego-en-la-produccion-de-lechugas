@@ -1,82 +1,74 @@
 
-#define ADC_VREF_mV    3300.0 // in millivolt
-#define ADC_RESOLUTION 4096.0
+// Según el valor arrojado por el sensor:
+// 0 ~ 300: suelo seco
+// 300 ~ 700: suelo húmedo
+// 700 ~ 950: en agua
 
-int segmentos[7] = {23,22,21,19,18,19,5};
-#define PIN_LM35 4
-float valorsensor;
-int dig[] = {32,33,15,4};
-int num[10][7]={
-             {1,1,1,1,1,1,0},//0
-             {0,1,1,0,0,0,0},//1
-             {1,1,0,1,1,0,1},//2
-             {1,1,1,1,0,0,1},//3
-             {0,1,1,0,0,1,1},//4
-             {1,0,1,1,0,1,1},//5
-             {1,0,1,1,1,1,1},//6
-             {1,1,1,0,0,0,0},//7
-             {1,1,1,1,1,1,1},//8
-             {1,1,1,0,0,1,1},//9
-};
+int segmentos[7] = {23, 22, 21, 19, 18, 19, 5};
+const int pinH = 26;
+int valorSensorHumedad = 0; // sensor de humedad
+const int pinBombaAgua = 12; // Pin de control de la bomba de agua
+int LDR = 14;
+int luminusidad;
 
-bool A,B,C,D,E,F,G = 0; 
-
-
-void setup() {
+void setup()
+{
   Serial.begin(115200);
-  
-  for(int i = 0; i < 8; i++)
-  {
-    pinMode(segmentos[i], OUTPUT); 
-    
-  }
-  for(int k = 0; k < 9 ; k++)
-  {
-    pinMode(dig[k], OUTPUT);
-    digitalWrite(dig[k], 1);
-  }
+  // Configurar el pin de la bomba de agua como salida
+  pinMode(pinBombaAgua, OUTPUT);
 
+  //Configurar el pin de la luminusidad como salida
+  pinMode(LDR, INPUT);
 }
 
-void loop() {
-    //medirTemperatura();
-      int voltaje = valorsensor*(3.3/4095);
-      // read the ADC value from the temperature sensor
-      int adcVal = analogRead(PIN_LM35);
-      // convert the ADC value to voltage in millivolt
-      float milliVolt = adcVal * (ADC_VREF_mV / ADC_RESOLUTION);
-      // convert the voltage to the temperature in °C
-      float tempC = milliVolt / 10;
-      // convert the °C to °F
-      float tempF = tempC * 9 / 5 + 32;
-      float diferencia = valorsensor - tempC;
+void loop()
+{
+  //humedad
+    valorSensorHumedad = analogRead(pinH);
+    Serial.print("Valor del sensor de humedad:  ");
+    Serial.println(valorSensorHumedad);
+    
+  // luminusidad
+    luminusidad = analogRead(LDR);
+    Serial.println("Valor del sensor de luminusidad:  ");
+    Serial.println(luminusidad);
 
-      // print the temperature in the Serial Monitor:
-      Serial.print("Temperature: ");
-      Serial.print(tempC);   // print the temperature in °C
-      Serial.print("°C");
-      Serial.print("  ~  "); // separator between °C and °F
-      Serial.print(tempF); 
-      Serial.println("°F");
-      // print the temperature in °F
-      Serial.println("Voltaje");
 
-      Serial.print(valorsensor);
-      //
-
-  int decena= tempC/10;
-  int unidad= (tempC-(decena*10));
-  int decimal(tempC*10-(decena*10*100+unidad*10));
-  int valor[3] = {decena,unidad,decimal};
-  for (int j = 0; j < 3; j++) {
-
-  }
-  for (int j = 0; j <3; j++) {
-    for (int s = 0; s < 7; s++) {
-      digitalWrite(segmentos[s], num[valor[j]][s]);
+    if (valorSensorHumedad < 300)
+    {
+        Serial.print("La lechuga necesita agua ");
+        Serial.print(valorSensorHumedad);
+        Serial.println(" Riegue hasta llegar a un valor aproximado de 400-600");
+        digitalWrite(pinBombaAgua, HIGH); // Activar la bomba de agua
+        Serial.println("Activando bomba de agua...");
+        delay(2000);
+        digitalWrite(pinBombaAgua, LOW); // Desactivar la bomba de agua
+      
+    
     }
-    digitalWrite(dig[j], LOW);
-    delay(10);
-    digitalWrite(dig[j], HIGH);
-  }
+    
+    else if (valorSensorHumedad >= 300 && valorSensorHumedad < 700)
+    {
+        Serial.print("La lechuga tiene suficiente agua ");
+        Serial.print(valorSensorHumedad);
+        Serial.println(" Mantenga la humedad de la planta en un valor entre 400-600");
+
+      }
+    
+    else if (valorSensorHumedad >= 700 && valorSensorHumedad < 2000)
+    {
+        Serial.print("La lechuga tiene mucha agua, expongalo a la luz solar para evitar que la lechuga muera ");
+        Serial.print(valorSensorHumedad);
+        Serial.println(" Mantenga la humedad de la planta en un valor entre 400-600");
+    
+    
+    }
+    else
+    {
+        Serial.print(valorSensorHumedad);
+        Serial.println(" Compruebe el funcionamiento del sistema o el planta tiene excesiva agua");
+
+    }
+    
+    delay(1000); 
 }
