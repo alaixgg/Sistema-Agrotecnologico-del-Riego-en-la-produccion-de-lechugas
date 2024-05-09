@@ -26,9 +26,9 @@
 
 - **Valores Normales:** Los valores normales pueden variar dependiendo del tipo de suelo y de la planta, pero típicamente oscilan entre 0 y 1023 en una escala analógica.
 - **Interpretación en el Código:**
-  - Menor que 300: Indica que el suelo está seco y la planta necesita ser regada.
-  - Entre 300 y 700: Indica que el suelo está húmedo y la planta tiene suficiente agua.
-  - Mayor que 700: Indica que el suelo está encharcado y la planta tiene demasiada agua.
+  - Menor que 3000: Indica que el suelo está seco y la planta necesita ser regada.
+  - Entre 3000 y 4095: Indica que el suelo está húmedo y la planta tiene suficiente agua.
+
 
 ### Sensor de Luminosidad (LDR):
 
