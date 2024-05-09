@@ -1,8 +1,8 @@
 
 // Según el valor arrojado por el sensor:
-// 0 ~ 300: suelo seco
-// 300 ~ 700: suelo húmedo
-// 700 ~ 950: en agua
+// 0 ~ 3000: suelo seco
+// 3000 ~ 4095: suelo húmedo
+
 
 int segmentos[7] = {23, 22, 21, 19, 18, 19, 5};
 const int pinH = 26;
@@ -662,7 +662,7 @@ void loop()
       Serial.print(tempC);
       Serial.print(" °C");
 
-    if (valorSensorHumedad < 300)
+    if (valorSensorHumedad < 3000)
     {
         Serial.print("La lechuga necesita agua ");
         Serial.print(valorSensorHumedad);
@@ -676,7 +676,7 @@ void loop()
     
     }
     
-    else if (valorSensorHumedad >= 300 && valorSensorHumedad < 700)
+    else if (valorSensorHumedad >= 3000 && valorSensorHumedad < 4095)
     {
         Serial.print("La lechuga tiene suficiente agua ");
         Serial.print(valorSensorHumedad);
@@ -685,14 +685,6 @@ void loop()
 
       }
     
-    else if (valorSensorHumedad >= 700 && valorSensorHumedad < 2000)
-    {
-        Serial.print("La lechuga tiene mucha agua, expongalo a la luz solar para evitar que la lechuga muera ");
-        Serial.print(valorSensorHumedad);
-        Serial.println(" Mantenga la humedad de la planta en un valor entre 400-600");
-        sendEmailMucha();
-    
-    }
     else
     {
         Serial.print(valorSensorHumedad);
