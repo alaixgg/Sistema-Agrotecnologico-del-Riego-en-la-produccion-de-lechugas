@@ -24,7 +24,7 @@
 
 ### Sensor de Humedad del Suelo (pinH):
 
-- **Valores Normales:** Los valores normales pueden variar dependiendo del tipo de suelo y de la planta, pero típicamente oscilan entre 0 y 1023 en una escala analógica.
+- **Valores Normales:** Los valores normales pueden variar dependiendo del tipo de suelo y de la planta, pero típicamente oscilan entre 0 y 4095 en una escala analógica.
 - **Interpretación en el Código:**
   - Menor que 3000: Indica que el suelo está seco y la planta necesita ser regada.
   - Entre 3000 y 4095: Indica que el suelo está húmedo y la planta tiene suficiente agua.
