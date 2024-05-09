@@ -63,6 +63,9 @@
 
   ## Autor: Andres Julian Alaix Perez (alaixgg)
 
+Este proyecto fue desarrollado en la [Universidad de Bogotá Jorge Tadeo Lozano](https://www.utadeo.edu.co/es).
+
+
   Fecha de Creación: abril 2024
 
   Última Modificación: 9 de mayo 2024
