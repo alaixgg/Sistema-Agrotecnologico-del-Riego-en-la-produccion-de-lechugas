@@ -56,7 +56,7 @@
   - En la función setup(), se inicializa el puerto serial, se configuran los pines de entrada y salida, se establece la conexión WiFi y se envía un correo electrónico de notificación al usuario para informar que la lechuga se ha conectado correctamente.
 
   - En la función loop(), se realizan las siguientes operaciones en cada iteración:
-    - Se desconecta y apaga el módulo WiFi para ahorrar energía.
+    - Se desconecta y apaga el módulo WiFi para ahorrar energía y permitir el funcionamiento de los sensores sin la necesidad de una fuente externa.
     - Se leen los valores de los sensores de humedad del suelo y luminosidad.
     - Se controlan las condiciones de la planta basadas en los valores de los sensores, activando la bomba de agua si es necesario y enviando correos electrónicos informativos al usuario.
     - Se espera un intervalo de tiempo antes de realizar la siguiente iteración para evitar un consumo excesivo de energía.
