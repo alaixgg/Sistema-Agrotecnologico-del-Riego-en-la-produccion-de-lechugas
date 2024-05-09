@@ -61,7 +61,7 @@
     - Se controlan las condiciones de la planta basadas en los valores de los sensores, activando la bomba de agua si es necesario y enviando correos electrónicos informativos al usuario.
     - Se espera un intervalo de tiempo antes de realizar la siguiente iteración para evitar un consumo excesivo de energía.
 
-  ## Autor: (alaixgg)
+  ## Autor: Andres Julian Alaix Perez (alaixgg)
 
   Fecha de Creación: abril 2024
 
